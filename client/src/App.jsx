@@ -1,12 +1,13 @@
+import Navbar from "./components/navbar";
+import Hero from "./components/hero";
 
 function App() {
-
-
-  return (
-    <>
-      <p className="flex justify-center items-center font-bold text-5xl text-red-500">Lets Go</p>
-    </>
-  )
+	return (
+		<>
+			<Navbar />
+			<Hero />
+		</>
+	);
 }
 
-export default App
+export default App;
