@@ -5,14 +5,24 @@ import Admin from "../models/Admin.model.js";
 
 dotenv.config();
 
-await mongoose.connect(process.env.MONGO_URI);
+const createAdmin = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
 
-const hashedPassword = await bcrypt.hash("admin123", 10);
+    // 👇 your password
+    const hashedPassword = await bcrypt.hash("Lok22rk+", 10);
 
-await Admin.create({
-  email: "admin@maketechberry.com",
-  password: hashedPassword
-});
+    await Admin.create({
+      email: "leafycloud57@gmail.com",
+      password: hashedPassword
+    });
 
-console.log("Admin created ✅");
-process.exit();
+    console.log("✅ Admin created successfully");
+    process.exit();
+  } catch (error) {
+    console.error("❌ Error creating admin:", error.message);
+    process.exit(1);
+  }
+};
+
+createAdmin();
