@@ -79,7 +79,7 @@ export default function App() {
               <h2 className={`text-3xl sm:text-5xl font-bold mb-8 leading-tight transition-colors duration-500 ${themeClasses.headline}`}>
                 We love <span className="text-indigo-900">software</span>
                 <br />
-                and the <span className="text-indigo-900">people</span> who
+                and the <span className="text-[#FFD21F]">people</span> who
                 <br />
                 build it.
               </h2>
