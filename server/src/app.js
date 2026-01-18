@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import internshipRoutes from "./routes/internship.routes.js";
 import projectRoutes from "./routes/project.routes.js";
+import reportRoutes from "./routes/report.routes.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.routes.js";
@@ -20,7 +21,8 @@ app.use(express.json());
 
 
 app.use("/api/internships", internshipRoutes);
-app.use("/api/projects", projectRoutes);  
+app.use("/api/projects", projectRoutes);
+app.use("/api/reports", reportRoutes);
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use("/api/auth", authRoutes);
 

@@ -3,9 +3,14 @@ import Navbar from "./components/common/Navbar";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/Home";
+import About from "./pages/About";
 import Register from "./pages/Register";
 import Login from "./pages/admin/Login";
 import Dashboard from "./pages/admin/Dashboard";
+import Internships from "./pages/admin/Internships";
+import Projects from "./pages/admin/Projects";
+import Reports from "./pages/admin/Reports";
+
 
 function AppContent() {
   const location = useLocation();
@@ -17,6 +22,7 @@ function AppContent() {
 
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
         <Route path="/register" element={<Register />} />
         <Route path="/admin/login" element={<Login />} />
         <Route
@@ -24,6 +30,30 @@ function AppContent() {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/internships"
+          element={
+            <ProtectedRoute>
+              <Internships />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/projects"
+          element={
+            <ProtectedRoute>
+              <Projects />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/reports"
+          element={
+            <ProtectedRoute>
+              <Reports />
             </ProtectedRoute>
           }
         />

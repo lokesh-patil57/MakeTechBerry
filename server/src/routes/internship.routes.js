@@ -2,7 +2,10 @@ import express from "express";
 import upload from "../middlewares/upload.middleware.js";
 import {
   registerInternship,
-  getAllInternships
+  getAllInternships,
+  deleteInternship,
+  approveInternship,
+  rejectInternship
 } from "../controllers/internship.controller.js";
 import protect from "../middlewares/auth.middleware.js";
 
@@ -14,8 +17,10 @@ router.post(
   registerInternship
 );
 
-router.get("/", getAllInternships);
-// Admin-only
+// Admin-only routes
 router.get("/", protect, getAllInternships);
+router.delete("/:id", protect, deleteInternship);
+router.patch("/:id/approve", protect, approveInternship);
+router.patch("/:id/reject", protect, rejectInternship);
 
 export default router;

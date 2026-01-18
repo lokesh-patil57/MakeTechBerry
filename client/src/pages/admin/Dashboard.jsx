@@ -6,10 +6,10 @@ import { getInternships, getProjects } from "../../services/admin.service.js";
 const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen }) => {
   const navigate = useNavigate();
   const menuItems = [
-    { icon: TrendingUp, label: "Dashboard", active: true },
-    { icon: Users, label: "Internships", active: false },
-    { icon: Briefcase, label: "Projects", active: false },
-    { icon: FileText, label: "Reports", active: false },
+    { icon: TrendingUp, label: "Dashboard", path: "/admin/dashboard", active: true },
+    { icon: Users, label: "Internships", path: "/admin/internships", active: false },
+    { icon: Briefcase, label: "Projects", path: "/admin/projects", active: false },
+    { icon: FileText, label: "Reports", path: "/admin/reports", active: false },
   ];
 
   const handleLogout = () => {
@@ -76,6 +76,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen })
         {menuItems.map((item, index) => (
           <button
             key={index}
+            onClick={() => item.path !== "#" && navigate(item.path)}
             className={`w-full flex items-center ${isCollapsed ? "justify-center" : "justify-start"
               } space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${item.active
                 ? "bg-[#9062FF] text-white font-semibold shadow-sm"

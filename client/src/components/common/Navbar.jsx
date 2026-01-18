@@ -10,6 +10,7 @@ const Navbar = () => {
 
   const navItems = [
     { name: "Home", path: "/" },
+    { name: "About", path: "/about" },
     { name: "Services", path: "/services" },
     { name: "Projects", path: "/projects" },
     { name: "Contact", path: "/contact" },
@@ -17,7 +18,7 @@ const Navbar = () => {
   ];
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 bg-white/95 backdrop-blur-md shadow-sm animate-in fade-in slide-in-from-top-4 duration-500">
+    <header className="fixed top-0 left-0 w-full z-50 bg-transparent backdrop-blur-md shadow-none animate-in fade-in slide-in-from-top-4 duration-500">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between relative">
 
         <Link
@@ -38,7 +39,7 @@ const Navbar = () => {
         </Link>
 
         {/* Center Pill Navigation - Desktop */}
-        <div className="hidden lg:flex items-center gap-1 bg-white/95 backdrop-blur-md px-3 py-2 rounded-full shadow-lg border border-white/50 absolute left-1/2 -translate-x-1/2 transition-all duration-300 ease-out hover:scale-105 overflow-hidden">
+        <div className="hidden lg:flex items-center gap-1 bg-white/40 backdrop-blur-md px-3 py-2 rounded-full border border-white/30 absolute left-1/2 -translate-x-1/2 transition-all duration-300 ease-out hover:scale-105 overflow-hidden">
           {navItems.map((item) => {
             const isActive = currentPath === item.path || (item.path === "/" && currentPath === "/");
             const isHovered = hoveredButton === item.name;
@@ -68,8 +69,8 @@ const Navbar = () => {
           <Link
             to="/admin/login"
             className="hidden sm:block px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-full border-2 border-[#9062FF]
-                       text-[#9062FF] transition-all duration-300 ease-out shadow-sm
-                       hover:bg-[#9062FF] hover:text-white hover:shadow-md hover:scale-105"
+                       text-[#9062FF] transition-all duration-300 ease-out
+                       hover:bg-[#9062FF] hover:text-white hover:scale-105"
           >
             Admin Login
           </Link>
@@ -86,7 +87,7 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden absolute top-full left-0 w-full bg-white shadow-lg border-t border-gray-200 py-4 animate-in slide-in-from-top-2 duration-200">
+          <div className="lg:hidden absolute top-full left-0 w-full bg-white/95 backdrop-blur-md border-t border-white/30 py-4 animate-in slide-in-from-top-2 duration-200">
             <div className="flex flex-col space-y-2 px-4">
               {navItems.map((item) => {
                 const isActive = currentPath === item.path || (item.path === "/" && currentPath === "/");
