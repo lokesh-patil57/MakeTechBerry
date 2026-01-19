@@ -52,7 +52,7 @@ const items = [
 
 export function Accordion() {
 	return (
-		<section className="bg-[#faf5ff] py-20">
+		<section className="bg-[#faf5ff] py-18">
 			<div className="w-full max-w-3xl mx-auto px-4">
 				<h2 className="text-4xl md:text-5xl font-bold text-center mb-16 uppercase tracking-tight">
 					Why Choose Us
