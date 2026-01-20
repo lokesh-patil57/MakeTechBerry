@@ -11,67 +11,64 @@ import Internships from "./pages/admin/Internships";
 import Projects from "./pages/admin/Projects";
 import Reports from "./pages/admin/Reports";
 
-
-
 function AppContent() {
-  const location = useLocation();
-  const isAdminPage = location.pathname.startsWith("/admin");
+	const location = useLocation();
+	const isAdminPage = location.pathname.startsWith("/admin");
 
-  return (
-    <div className={isAdminPage ? "min-h-screen" : "bg-[#E7DEFE] min-h-screen"}>
-      {!isAdminPage && <Navbar />}
+	return (
+		<div className={isAdminPage ? "min-h-screen" : "bg-[#E7DEFE] min-h-screen"}>
+			{!isAdminPage && <Navbar />}
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/admin/login" element={<Login />} />
-        <Route
-          path="/admin/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/internships"
-          element={
-            <ProtectedRoute>
-              <Internships />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/projects"
-          element={
-            <ProtectedRoute>
-              <Projects />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/reports"
-          element={
-            <ProtectedRoute>
-              <Reports />
-            </ProtectedRoute>
-          }
-        />
+			<Routes>
+				<Route path="/" element={<Home />} />
+				<Route path="/about" element={<About />} />
+				<Route path="/register" element={<Register />} />
+				<Route path="/admin/login" element={<Login />} />
+				<Route
+					path="/admin/dashboard"
+					element={
+						<ProtectedRoute>
+							<Dashboard />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path="/admin/internships"
+					element={
+						<ProtectedRoute>
+							<Internships />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path="/admin/projects"
+					element={
+						<ProtectedRoute>
+							<Projects />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path="/admin/reports"
+					element={
+						<ProtectedRoute>
+							<Reports />
+						</ProtectedRoute>
+					}
+				/>
+			</Routes>
 
-      </Routes>
-
-      {!isAdminPage && <Footer />}
-    </div>
-  );
+			{!isAdminPage && <Footer />}
+		</div>
+	);
 }
 
 function App() {
-  return (
-    <BrowserRouter>
-      <AppContent />
-    </BrowserRouter>
-  );
+	return (
+		<BrowserRouter>
+			<AppContent />
+		</BrowserRouter>
+	);
 }
 
 export default App;
