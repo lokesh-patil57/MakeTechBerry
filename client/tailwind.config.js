@@ -5,8 +5,10 @@ export default {
     "./index.html",
     "./src/**/*.{js,jsx}"
   ],
-  theme: {
-    extend: {},
+ theme: {
+  fontFamily: {
+    sans: ['Inter', 'sans-serif'],
   },
+},
   plugins: [],
 }
