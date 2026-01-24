@@ -105,7 +105,6 @@ const FoundingMemberCard = ({ initials, name, role, phone, delay }) => {
     text: "text-[#9062FF]",
     gradient: "from-[#E7DEFE] to-[#ddd0fe]",
     light: "bg-purple-20",
-   
   };
 
   return (
@@ -127,9 +126,11 @@ const FoundingMemberCard = ({ initials, name, role, phone, delay }) => {
           <div
             className={`w-20 h-20 mb-6 rounded-3xl bg-gradient-to-br ${color.gradient} flex items-center justify-center shadow-lg transition-all duration-700 z-10 ${isHovered ? "scale-110 rotate-6 shadow-xl" : ""}`}
           >
-            <span className={`text-2xl font-black text-[#9062FF]`}>{initials}</span>
+            <span className={`text-2xl font-black text-[#9062FF]`}>
+              {initials}
+            </span>
           </div>
-         <h3 className="text-xl font-semibold text-gray-800 tracking-tight leading-tight">
+          <h3 className="text-xl font-semibold text-gray-800 tracking-tight leading-tight">
             {name}
           </h3>
           <p
@@ -154,9 +155,9 @@ const FoundingMemberCard = ({ initials, name, role, phone, delay }) => {
             </p>
           </div>
           <button className="w-full mt-4 py-4 px-6 bg-[#ddd0fe] text-white font-bold rounded-2xl shadow-lg flex items-center justify-center gap-2 group/btn hover:scale-[1.02] active:scale-[0.98] transition-all duration-300">
-          <span className="text-[#9062FF]">View Profile</span>
+            <span className="text-[#9062FF]">View Profile</span>
 
-            <ArrowUpRight className="w-4 h-4 group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
+            <ArrowUpRight className="w-4 h-4 text-[#9062FF] group-hover/btn:text-[#7A4DFF] transition-all" />
           </button>
         </div>
       </div>
@@ -337,7 +338,7 @@ const AboutPage = () => {
         `}</style>
 
         {/* --- HERO SECTION --- */}
-        <section className="relative pt-32 pb-60 text-center">
+        <section className="relative pt-50 pb-60 text-center">
           <div className="absolute top-0 left-0 w-full h-[82%] bg-slate-100/80 -z-10 border-b border-slate-200" />
 
           <div className="max-w-7xl mx-auto px-6 relative z-10">
