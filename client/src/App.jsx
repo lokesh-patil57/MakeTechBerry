@@ -10,6 +10,7 @@ import Internships from "./pages/admin/Internships";
 import Projects from "./pages/admin/Projects";
 import Reports from "./pages/admin/Reports";
 import Services from "./pages/Services";
+import Project from "./pages/Project";
 import Messages from "./pages/admin/Messages";
 import Contact from "./pages/Contact";
 import About from "./pages/About";
@@ -25,6 +26,7 @@ function AppContent() {
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route path="/services" element={<Services />} />
+				<Route path="/projects" element={<Project />} />
 				<Route path="/register" element={<Register />} />
 				<Route path="/about" element={<About />} />
 				<Route path="/contact" element={<Contact />} />

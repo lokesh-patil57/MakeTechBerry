@@ -1,7 +1,17 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Menu, X, Briefcase, TrendingUp, FileText, ChevronRight, Search, Filter, Calendar, Mail, Phone, MapPin, ExternalLink, Clock, LogOut, Trash2, Building2, DollarSign, Calendar as CalendarIcon, Code, Tag, Users, CheckCircle, XCircle } from "lucide-react";
-import { getProjects, deleteProject, approveProject, rejectProject } from "../../services/admin.service.js";
+import { 
+  Menu, X, Briefcase, TrendingUp, FileText, ChevronRight, Search, Filter, 
+  Calendar, Mail, Phone, Clock, LogOut, Trash2, Code, Users, CheckCircle, 
+  XCircle, Plus, Edit2, Save, X as XIcon, Tag, Image as ImageIcon
+} from "lucide-react";
+import { 
+  getShowcaseProjects, 
+  createShowcaseProject, 
+  updateShowcaseProject, 
+  deleteShowcaseProject, 
+  changeShowcaseProjectStatus 
+} from "../../services/admin.service.js";
 import { useToast } from "../../hooks/useToast.js";
 import Toast from "../../components/forms/Toast.jsx";
 
@@ -22,7 +32,6 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen })
 
   return (
     <>
-      {/* Mobile Overlay */}
       {isMobileOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
@@ -35,7 +44,6 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen })
           } fixed left-0 top-0 h-screen bg-white border-r border-[#FFFFFF] transition-all duration-300 ease-in-out flex flex-col z-50
           ${isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
       >
-        {/* Logo Section */}
         <div className="p-4 sm:p-6 border-b border-[#FFFFFF] flex items-center justify-between">
           {!isCollapsed && (
             <div className="flex items-center space-x-2 animate-fade-in">
@@ -64,7 +72,6 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen })
               />
             </div>
           )}
-          {/* Mobile Close Button */}
           <button
             onClick={() => setIsMobileOpen(false)}
             className="lg:hidden p-1 rounded-lg hover:bg-gray-100 transition-colors"
@@ -74,7 +81,6 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen })
           </button>
         </div>
 
-        {/* Menu Items */}
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto hide-scrollbar">
           {menuItems.map((item, index) => (
             <button
@@ -94,7 +100,6 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen })
           ))}
         </nav>
 
-        {/* Logout Button */}
         <div className="p-4 border-t border-[#FFFFFF]">
           <button
             onClick={handleLogout}
@@ -108,7 +113,6 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen })
           </button>
         </div>
 
-        {/* Collapse Button - Desktop Only */}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="hidden lg:block absolute -right-3 top-20 bg-white border border-[#9062FF] rounded-full p-1.5 shadow-md hover:shadow-lg transition-all duration-200 hover:bg-[#9062FF]"
@@ -132,7 +136,17 @@ const Projects = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [deletingId, setDeletingId] = useState(null);
-  const [processingId, setProcessingId] = useState(null);
+  const [editingId, setEditingId] = useState(null);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [formData, setFormData] = useState({
+    projectTitle: "",
+    projectDescription: "",
+    techStack: "",
+    status: "ongoing",
+    teamMembers: "",
+    role: "",
+    featuredImage: ""
+  });
 
   const token = localStorage.getItem("adminToken");
   const navigate = useNavigate();
@@ -144,118 +158,142 @@ const Projects = () => {
       return;
     }
 
-    const fetchData = async () => {
-      try {
-        const projectsRes = await getProjects(token);
-        setProjects(projectsRes.data.data || []);
-      } catch (error) {
-        console.error("Failed to fetch projects");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
+    fetchProjects();
   }, [token, navigate]);
 
-  // Filter projects
-  const filteredProjects = projects.filter((project) => {
-    const matchesSearch =
-      project.projectTitle?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.companyName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.contactPerson?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.email?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus =
-      filterStatus === "all" || project.status?.toLowerCase() === filterStatus.toLowerCase();
-    return matchesSearch && matchesStatus;
-  });
+  const fetchProjects = async () => {
+    try {
+      setLoading(true);
+      const projectsRes = await getShowcaseProjects(token);
+      setProjects(projectsRes.data.data || []);
+    } catch (error) {
+      console.error("Failed to fetch projects:", error);
+      showToast("Failed to fetch projects. Please try again.", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  // Get unique statuses for filters
-  const uniqueStatuses = [...new Set(projects.map((p) => p.status).filter(Boolean))];
+  const resetForm = () => {
+    setFormData({
+      projectTitle: "",
+      projectDescription: "",
+      techStack: "",
+      status: "ongoing",
+      teamMembers: "",
+      role: "",
+      featuredImage: ""
+    });
+    setEditingId(null);
+    setShowAddForm(false);
+  };
 
-  // Delete project
+  const handleAdd = () => {
+    resetForm();
+    setShowAddForm(true);
+  };
+
+  const handleEdit = (project) => {
+    setFormData({
+      projectTitle: project.projectTitle || "",
+      projectDescription: project.projectDescription || "",
+      techStack: project.techStack || "",
+      status: project.status || "ongoing",
+      teamMembers: Array.isArray(project.teamMembers) ? project.teamMembers.join(", ") : "",
+      role: project.role || "",
+      featuredImage: project.featuredImage || ""
+    });
+    setEditingId(project._id);
+    setShowAddForm(true);
+  };
+
+  const handleSave = async () => {
+    if (!formData.projectTitle || !formData.projectDescription || !formData.techStack) {
+      showToast("Please fill in all required fields.", "error");
+      return;
+    }
+
+    try {
+      const dataToSend = {
+        ...formData,
+        teamMembers: formData.teamMembers
+          ? formData.teamMembers.split(",").map(m => m.trim()).filter(m => m)
+          : []
+      };
+
+      if (editingId) {
+        await updateShowcaseProject(editingId, dataToSend, token);
+        showToast("Project updated successfully!", "success");
+      } else {
+        await createShowcaseProject(dataToSend, token);
+        showToast("Project created successfully!", "success");
+      }
+
+      resetForm();
+      fetchProjects();
+    } catch (error) {
+      console.error("Failed to save project:", error);
+      showToast(`Failed to ${editingId ? 'update' : 'create'} project. Please try again.`, "error");
+    }
+  };
+
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this project registration? This action cannot be undone.")) {
+    if (!window.confirm("Are you sure you want to delete this project? This action cannot be undone.")) {
       return;
     }
 
     setDeletingId(id);
     try {
-      await deleteProject(id, token);
+      await deleteShowcaseProject(id, token);
       setProjects(projects.filter(project => project._id !== id));
       showToast("Project deleted successfully!", "success");
     } catch (error) {
-      console.error("Failed to delete project");
+      console.error("Failed to delete project:", error);
       showToast("Failed to delete project. Please try again.", "error");
     } finally {
       setDeletingId(null);
     }
   };
 
-  // Approve project
-  const handleApprove = async (id) => {
-    if (!window.confirm("Are you sure you want to approve this project registration?")) {
-      return;
-    }
-
-    setProcessingId(id);
+  const handleStatusChange = async (id, newStatus) => {
     try {
-      await approveProject(id, token);
+      await changeShowcaseProjectStatus(id, newStatus, token);
       setProjects(projects.map(project => 
-        project._id === id ? { ...project, status: "Approved" } : project
+        project._id === id ? { ...project, status: newStatus } : project
       ));
-      showToast("Project approved successfully!", "success");
+      showToast("Project status updated successfully!", "success");
     } catch (error) {
-      console.error("Failed to approve project");
-      showToast("Failed to approve project. Please try again.", "error");
-    } finally {
-      setProcessingId(null);
+      console.error("Failed to change status:", error);
+      showToast("Failed to update project status. Please try again.", "error");
     }
   };
 
-  // Reject project
-  const handleReject = async (id) => {
-    if (!window.confirm("Are you sure you want to reject this project registration?")) {
-      return;
-    }
+  const filteredProjects = projects.filter((project) => {
+    const matchesSearch =
+      project.projectTitle?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      project.projectDescription?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      project.techStack?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus =
+      filterStatus === "all" || project.status?.toLowerCase() === filterStatus.toLowerCase();
+    return matchesSearch && matchesStatus;
+  });
 
-    setProcessingId(id);
-    try {
-      await rejectProject(id, token);
-      setProjects(projects.map(project => 
-        project._id === id ? { ...project, status: "Rejected" } : project
-      ));
-      showToast("Project rejected successfully!", "success");
-    } catch (error) {
-      console.error("Failed to reject project");
-      showToast("Failed to reject project. Please try again.", "error");
-    } finally {
-      setProcessingId(null);
-    }
-  };
-
-  // Format date
   const formatDate = (dateString) => {
     if (!dateString) return "N/A";
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { 
       year: 'numeric', 
       month: 'long', 
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+      day: 'numeric'
     });
   };
 
-  // Get status badge color
   const getStatusColor = (status) => {
     const statusLower = status?.toLowerCase();
     if (statusLower === "completed") {
       return "bg-green-100 text-green-700";
-    } else if (statusLower === "in progress") {
-      return "bg-blue-100 text-blue-700";
     } else {
-      return "bg-yellow-100 text-yellow-700";
+      return "bg-orange-100 text-orange-700";
     }
   };
 
@@ -283,7 +321,6 @@ const Projects = () => {
         ${isCollapsed ? 'lg:ml-20' : 'lg:ml-64'} 
         transition-all duration-300 hide-scrollbar`}>
         
-        {/* Mobile Menu Button */}
         <button
           onClick={() => setIsMobileOpen(true)}
           className="lg:hidden fixed top-4 left-4 z-30 p-2 bg-white rounded-lg shadow-md border border-[#9062FF] hover:bg-[#9062FF] hover:text-white transition-colors"
@@ -292,11 +329,10 @@ const Projects = () => {
           <Menu className="w-6 h-6" />
         </button>
 
-        {/* PAGE HEADER */}
         <div className="flex items-center justify-between animate-slide-down flex-wrap gap-4 mt-12 lg:mt-0">
           <div>
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-black from-black via-[#9062FF] to-[#c9a7ff] bg-clip-text text-transparent">
-              Project Registrations
+              Showcase Projects
             </h1>
             <p className="text-gray-600 mt-2 flex items-center gap-2 text-sm sm:text-base">
               <Calendar className="w-4 h-4" />
@@ -308,12 +344,15 @@ const Projects = () => {
               </span>
             </p>
           </div>
-          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#9062FF] rounded-full flex items-center justify-center shadow-md">
-            <Briefcase className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-          </div>
+          <button
+            onClick={handleAdd}
+            className="flex items-center gap-2 px-4 py-2 bg-[#9062FF] text-white rounded-lg hover:bg-[#7c52e6] transition-all duration-200 font-medium shadow-md"
+          >
+            <Plus className="w-5 h-5" />
+            <span>Add Project</span>
+          </button>
         </div>
 
-        {/* STATS CARD */}
         <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 animate-slide-up">
           <div className="flex items-center justify-between mb-4">
             <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#9062FF] rounded-xl flex items-center justify-center">
@@ -325,14 +364,141 @@ const Projects = () => {
           <h2 className="text-3xl sm:text-4xl font-bold text-black mt-2">{projects.length}</h2>
         </div>
 
-        {/* SEARCH AND FILTER */}
+        {showAddForm && (
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6 animate-slide-up">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-black">
+                {editingId ? "Edit Project" : "Add New Project"}
+              </h2>
+              <button
+                onClick={resetForm}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <XIcon className="w-5 h-5 text-gray-600" />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Project Title <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={formData.projectTitle}
+                  onChange={(e) => setFormData({ ...formData, projectTitle: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9062FF]"
+                  placeholder="Enter project title"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Description <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  value={formData.projectDescription}
+                  onChange={(e) => setFormData({ ...formData, projectDescription: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9062FF]"
+                  placeholder="Enter project description"
+                  rows="4"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Tech Stack <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={formData.techStack}
+                  onChange={(e) => setFormData({ ...formData, techStack: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9062FF]"
+                  placeholder="e.g., React, Node.js, MongoDB"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Status <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    value={formData.status}
+                    onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9062FF]"
+                  >
+                    <option value="ongoing">Ongoing</option>
+                    <option value="completed">Completed</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Role
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.role}
+                    onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9062FF]"
+                    placeholder="e.g., Full-stack Developer"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Team Members (comma-separated)
+                </label>
+                <input
+                  type="text"
+                  value={formData.teamMembers}
+                  onChange={(e) => setFormData({ ...formData, teamMembers: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9062FF]"
+                  placeholder="e.g., John Doe, Jane Smith"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Featured Image URL
+                </label>
+                <input
+                  type="text"
+                  value={formData.featuredImage}
+                  onChange={(e) => setFormData({ ...formData, featuredImage: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9062FF]"
+                  placeholder="https://example.com/image.jpg"
+                />
+              </div>
+
+              <div className="flex gap-3 pt-4">
+                <button
+                  onClick={handleSave}
+                  className="flex items-center gap-2 px-6 py-2 bg-[#9062FF] text-white rounded-lg hover:bg-[#7c52e6] transition-all duration-200 font-medium"
+                >
+                  <Save className="w-4 h-4" />
+                  {editingId ? "Update Project" : "Create Project"}
+                </button>
+                <button
+                  onClick={resetForm}
+                  className="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all duration-200 font-medium"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6 animate-slide-up" style={{ animationDelay: "0.1s" }}>
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1 w-full sm:min-w-[250px] relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search by project title, company, or contact person..."
+                placeholder="Search projects..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-9 sm:pl-10 pr-4 py-2 text-sm sm:text-base border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9062FF] focus:border-transparent"
@@ -346,17 +512,13 @@ const Projects = () => {
                 className="w-full pl-9 sm:pl-10 pr-4 py-2 text-sm sm:text-base border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9062FF] focus:border-transparent appearance-none bg-white"
               >
                 <option value="all">All Statuses</option>
-                {uniqueStatuses.map((status) => (
-                  <option key={status} value={status.toLowerCase()}>
-                    {status}
-                  </option>
-                ))}
+                <option value="ongoing">Ongoing</option>
+                <option value="completed">Completed</option>
               </select>
             </div>
           </div>
         </div>
 
-        {/* PROJECT CARDS */}
         <div className="space-y-4 sm:space-y-6">
           {filteredProjects.length > 0 ? (
             filteredProjects.map((project, index) => (
@@ -372,55 +534,81 @@ const Projects = () => {
                     </div>
                     <div>
                       <h3 className="text-xl sm:text-2xl font-bold text-black mb-1">{project.projectTitle || "N/A"}</h3>
-                      <p className="text-sm text-gray-500">Project #{index + 1}</p>
+                      <p className="text-sm text-gray-500">{formatDate(project.createdAt)}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className={`px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${getStatusColor(project.status)}`}>
-                      {project.status || "Pending"}
+                      {project.status === "completed" ? "Completed" : "Ongoing"}
                     </span>
                   </div>
                 </div>
 
-                {/* Action Buttons */}
-                <div className="flex items-center gap-2 sm:gap-3 mb-4 pb-4 border-b border-gray-200 flex-wrap">
+                {project.featuredImage && (
+                  <div className="mb-4">
+                    <img 
+                      src={project.featuredImage} 
+                      alt={project.projectTitle}
+                      className="w-full h-48 object-cover rounded-xl"
+                      onError={(e) => e.target.style.display = 'none'}
+                    />
+                  </div>
+                )}
+
+                <div className="mb-4">
+                  <p className="text-sm sm:text-base text-gray-800 leading-relaxed">{project.projectDescription || "N/A"}</p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-4">
+                  <div className="flex items-start gap-3">
+                    <Code className="w-5 h-5 text-[#9062FF] flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-xs text-gray-500 font-medium mb-1">Tech Stack</p>
+                      <p className="text-sm sm:text-base text-gray-800 font-medium">{project.techStack || "N/A"}</p>
+                    </div>
+                  </div>
+
+                  {project.role && (
+                    <div className="flex items-start gap-3">
+                      <Users className="w-5 h-5 text-[#9062FF] flex-shrink-0 mt-0.5" />
+                      <div>
+                        <p className="text-xs text-gray-500 font-medium mb-1">Role</p>
+                        <p className="text-sm sm:text-base text-gray-800 font-medium">{project.role}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {project.teamMembers && project.teamMembers.length > 0 && (
+                    <div className="flex items-start gap-3">
+                      <Users className="w-5 h-5 text-[#9062FF] flex-shrink-0 mt-0.5" />
+                      <div>
+                        <p className="text-xs text-gray-500 font-medium mb-1">Team Members</p>
+                        <p className="text-sm sm:text-base text-gray-800 font-medium">
+                          {Array.isArray(project.teamMembers) ? project.teamMembers.join(", ") : project.teamMembers}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-2 sm:gap-3 pt-4 border-t border-gray-200 flex-wrap">
                   <button
-                    onClick={() => handleApprove(project._id)}
-                    disabled={processingId === project._id || project.status === "Approved"}
-                    className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-green-50 text-green-600 rounded-lg hover:bg-green-100 transition-all duration-200 font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                    onClick={() => handleEdit(project)}
+                    className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-all duration-200 font-medium text-sm"
                   >
-                    {processingId === project._id && deletingId !== project._id ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-green-600 border-t-transparent rounded-full animate-spin"></div>
-                        <span>Processing...</span>
-                      </>
-                    ) : (
-                      <>
-                        <CheckCircle className="w-4 h-4" />
-                        <span>Approve</span>
-                      </>
-                    )}
+                    <Edit2 className="w-4 h-4" />
+                    <span>Edit</span>
                   </button>
                   <button
-                    onClick={() => handleReject(project._id)}
-                    disabled={processingId === project._id || project.status === "Rejected"}
-                    className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-all duration-200 font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                    onClick={() => handleStatusChange(project._id, project.status === "ongoing" ? "completed" : "ongoing")}
+                    className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-purple-50 text-purple-600 rounded-lg hover:bg-purple-100 transition-all duration-200 font-medium text-sm"
                   >
-                    {processingId === project._id && deletingId !== project._id ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
-                        <span>Processing...</span>
-                      </>
-                    ) : (
-                      <>
-                        <XCircle className="w-4 h-4" />
-                        <span>Reject</span>
-                      </>
-                    )}
+                    <Tag className="w-4 h-4" />
+                    <span>Mark as {project.status === "ongoing" ? "Completed" : "Ongoing"}</span>
                   </button>
                   <button
                     onClick={() => handleDelete(project._id)}
-                    disabled={deletingId === project._id || processingId === project._id}
+                    disabled={deletingId === project._id}
                     className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-all duration-200 font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {deletingId === project._id ? (
@@ -436,77 +624,6 @@ const Projects = () => {
                     )}
                   </button>
                 </div>
-
-                <div className="mb-4">
-                  <p className="text-xs text-gray-500 font-medium mb-2">Project Description</p>
-                  <p className="text-sm sm:text-base text-gray-800 leading-relaxed">{project.projectDescription || "N/A"}</p>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                  <div className="flex items-start gap-3">
-                    <Building2 className="w-5 h-5 text-[#9062FF] flex-shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-xs text-gray-500 font-medium mb-1">Company Name</p>
-                      <p className="text-sm sm:text-base text-gray-800 font-medium">{project.companyName || "N/A"}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <Mail className="w-5 h-5 text-[#9062FF] flex-shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-xs text-gray-500 font-medium mb-1">Contact Person</p>
-                      <p className="text-sm sm:text-base text-gray-800 font-medium">{project.contactPerson || "N/A"}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <Mail className="w-5 h-5 text-[#9062FF] flex-shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-xs text-gray-500 font-medium mb-1">Email</p>
-                      <p className="text-sm sm:text-base text-gray-800 font-medium">{project.email || "N/A"}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <Phone className="w-5 h-5 text-[#9062FF] flex-shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-xs text-gray-500 font-medium mb-1">Phone</p>
-                      <p className="text-sm sm:text-base text-gray-800 font-medium">{project.phone || "N/A"}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <Code className="w-5 h-5 text-[#9062FF] flex-shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-xs text-gray-500 font-medium mb-1">Tech Stack</p>
-                      <p className="text-sm sm:text-base text-gray-800 font-medium">{project.techStack || "N/A"}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <DollarSign className="w-5 h-5 text-[#9062FF] flex-shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-xs text-gray-500 font-medium mb-1">Budget</p>
-                      <p className="text-sm sm:text-base text-gray-800 font-medium">{project.budget || "N/A"}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <Clock className="w-5 h-5 text-[#9062FF] flex-shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-xs text-gray-500 font-medium mb-1">Timeline</p>
-                      <p className="text-sm sm:text-base text-gray-800 font-medium">{project.timeline || "N/A"}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <CalendarIcon className="w-5 h-5 text-[#9062FF] flex-shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-xs text-gray-500 font-medium mb-1">Submitted On</p>
-                      <p className="text-sm sm:text-base text-gray-800 font-medium">{formatDate(project.createdAt)}</p>
-                    </div>
-                  </div>
-                </div>
               </div>
             ))
           ) : (
@@ -515,13 +632,12 @@ const Projects = () => {
               <p className="text-gray-500 text-lg font-medium">
                 {searchTerm || filterStatus !== "all"
                   ? "No results found. Try adjusting your filters."
-                  : "No project registrations yet"}
+                  : "No projects yet. Click 'Add Project' to create one."}
               </p>
             </div>
           )}
         </div>
 
-        {/* Results count */}
         {filteredProjects.length > 0 && (
           <div className="text-sm text-gray-600 text-center pb-4">
             Showing {filteredProjects.length} of {projects.length} projects
@@ -529,7 +645,6 @@ const Projects = () => {
         )}
       </div>
 
-      {/* Toast Notification */}
       {toast && (
         <Toast
           message={toast.message}

@@ -119,3 +119,53 @@ export const deleteMessage = (id, token) => {
     }
   });
 };
+
+// ========== SHOWCASE PROJECT SERVICES ==========
+
+export const getShowcaseProjects = (token) => {
+  return api.get("/projects/showcase", {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+};
+
+export const getShowcaseProject = (id, token) => {
+  return api.get(`/projects/showcase/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+};
+
+export const createShowcaseProject = (data, token) => {
+  return api.post("/projects/showcase", data, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+};
+
+export const updateShowcaseProject = (id, data, token) => {
+  return api.put(`/projects/showcase/${id}`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+};
+
+export const deleteShowcaseProject = (id, token) => {
+  return api.delete(`/projects/showcase/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+};
+
+export const changeShowcaseProjectStatus = (id, status, token) => {
+  return api.patch(`/projects/showcase/${id}/status`, { status }, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+};
