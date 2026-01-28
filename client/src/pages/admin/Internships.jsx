@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Menu, X, Users, TrendingUp, FileText, ChevronRight, Search, Filter, Calendar, Mail, Phone, MapPin, ExternalLink, Clock, LogOut, Trash2, GraduationCap, Briefcase, Calendar as CalendarIcon, Download, CheckCircle, XCircle } from "lucide-react";
+import { Menu, X, Users, TrendingUp, FileText, ChevronRight, Search, Filter, Calendar, Mail, Phone, MapPin, ExternalLink, Clock, LogOut, Trash2, GraduationCap, Briefcase, Calendar as CalendarIcon, Download, CheckCircle, XCircle, ClipboardList } from "lucide-react";
 import { getInternships, deleteInternship, approveInternship, rejectInternship } from "../../services/admin.service.js";
 import { useToast } from "../../hooks/useToast.js";
 import Toast from "../../components/forms/Toast.jsx";
@@ -10,6 +10,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen })
   const menuItems = [
     { icon: TrendingUp, label: "Dashboard", path: "/admin/dashboard", active: false },
     { icon: Users, label: "Internships", path: "/admin/internships", active: true },
+    { icon: ClipboardList, label: "Project Proposals", path: "/admin/project-proposals", active: false },
     { icon: Briefcase, label: "Projects", path: "/admin/projects", active: false },
     { icon: FileText, label: "Reports", path: "/admin/reports", active: false },
     { icon: Mail, label: "Messages", path: "/admin/messages", active: false },
@@ -38,7 +39,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen })
         {/* Logo Section */}
         <div className="p-4 sm:p-6 border-b border-[#FFFFFF] flex items-center justify-between">
           {!isCollapsed && (
-            <div className="flex items-center space-x-2 animate-fade-in">
+            <div className="flex items-center space-x-2">
               <img
                 src="/images/logo.png"
                 className="w-10 h-10 sm:w-14 sm:h-14 object-contain drop-shadow-md"
@@ -88,7 +89,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen })
             >
               <item.icon className="w-5 h-5" />
               {!isCollapsed && (
-                <span className="font-medium animate-fade-in">{item.label}</span>
+                <span className="font-medium">{item.label}</span>
               )}
             </button>
           ))}
@@ -103,7 +104,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen })
           >
             <LogOut className="w-5 h-5" />
             {!isCollapsed && (
-              <span className="animate-fade-in">Logout</span>
+              <span>Logout</span>
             )}
           </button>
         </div>
