@@ -7,6 +7,7 @@ import Register from "./pages/Register";
 import Login from "./pages/admin/Login";
 import Dashboard from "./pages/admin/Dashboard";
 import Internships from "./pages/admin/Internships";
+import ProjectProposals from "./pages/admin/ProjectProposals";
 import Projects from "./pages/admin/Projects";
 import Reports from "./pages/admin/Reports";
 import Services from "./pages/Services";
@@ -44,6 +45,14 @@ function AppContent() {
 					element={
 						<ProtectedRoute>
 							<Internships />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path="/admin/project-proposals"
+					element={
+						<ProtectedRoute>
+							<ProjectProposals />
 						</ProtectedRoute>
 					}
 				/>

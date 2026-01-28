@@ -428,7 +428,7 @@ const Services = () => {
 				{/* CTA Section */}
 				<section className="py-16 px-4 sm:px-6 lg:px-8">
 					<div className="max-w-4xl mx-auto">
-						<div className="bg-gradient-to-br from-[#7C3AED] to-[#a855f7] rounded-[32px] p-12 text-center shadow-[0_20px_50px_rgba(124,58,237,0.3)]">
+						<div className="bg-gradient-to-br from-[#aa92e8] to-[#c591fa] rounded-[32px] p-12 text-center shadow-[0_20px_50px_rgba(124,58,237,0.3)]">
 							<h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
 								Ready to Build Something Amazing?
 							</h2>

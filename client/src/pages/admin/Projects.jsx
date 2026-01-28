@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { 
-  Menu, X, Briefcase, TrendingUp, FileText, ChevronRight, Search, Filter, 
-  Calendar, Mail, Phone, Clock, LogOut, Trash2, Code, Users, CheckCircle, 
+import {
+  Menu, X, Briefcase, TrendingUp, FileText, ClipboardList, ChevronRight, Search, Filter,
+  Calendar, Mail, Phone, Clock, LogOut, Trash2, Code, Users, CheckCircle,
   XCircle, Plus, Edit2, Save, X as XIcon, Tag, Image as ImageIcon
 } from "lucide-react";
 import { 
@@ -20,6 +20,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen })
   const menuItems = [
     { icon: TrendingUp, label: "Dashboard", path: "/admin/dashboard", active: false },
     { icon: Users, label: "Internships", path: "/admin/internships", active: false },
+    { icon: ClipboardList, label: "Project Proposals", path: "/admin/project-proposals", active: false },
     { icon: Briefcase, label: "Projects", path: "/admin/projects", active: true },
     { icon: FileText, label: "Reports", path: "/admin/reports", active: false },
     { icon: Mail, label: "Messages", path: "/admin/messages", active: false },
