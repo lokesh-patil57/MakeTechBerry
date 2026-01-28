@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Menu, X, FileText, TrendingUp, Users, Briefcase, ChevronRight, Search, Filter, Calendar, Mail, Phone, Clock, LogOut, GraduationCap, Building2, DollarSign, Calendar as CalendarIcon, Code, CheckCircle, XCircle, Download, ExternalLink, Trash2 } from "lucide-react";
+import { Menu, X, FileText, TrendingUp, Users, Briefcase, ClipboardList, ChevronRight, Search, Filter, Calendar, Mail, Phone, Clock, LogOut, GraduationCap, Building2, DollarSign, Calendar as CalendarIcon, Code, CheckCircle, XCircle, Download, ExternalLink, Trash2 } from "lucide-react";
 import { getReports, getReportsByType, getReportsByAction, deleteReport } from "../../services/admin.service.js";
 import { useToast } from "../../hooks/useToast.js";
 import Toast from "../../components/forms/Toast.jsx";
@@ -10,6 +10,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen })
   const menuItems = [
     { icon: TrendingUp, label: "Dashboard", path: "/admin/dashboard", active: false },
     { icon: Users, label: "Internships", path: "/admin/internships", active: false },
+    { icon: ClipboardList, label: "Project Proposals", path: "/admin/project-proposals", active: false },
     { icon: Briefcase, label: "Projects", path: "/admin/projects", active: false },
     { icon: FileText, label: "Reports", path: "/admin/reports", active: true },
     { icon: Mail, label: "Messages", path: "/admin/messages", active: false },

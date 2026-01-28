@@ -7,6 +7,7 @@ import {
   Users,
   Briefcase,
   FileText,
+  ClipboardList,
   Mail,
   Phone,
   Clock,
@@ -25,6 +26,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen })
   const menuItems = [
     { icon: TrendingUp, label: "Dashboard", path: "/admin/dashboard", active: false },
     { icon: Users, label: "Internships", path: "/admin/internships", active: false },
+    { icon: ClipboardList, label: "Project Proposals", path: "/admin/project-proposals", active: false },
     { icon: Briefcase, label: "Projects", path: "/admin/projects", active: false },
     { icon: FileText, label: "Reports", path: "/admin/reports", active: false },
     { icon: Mail, label: "Messages", path: "/admin/messages", active: true },
