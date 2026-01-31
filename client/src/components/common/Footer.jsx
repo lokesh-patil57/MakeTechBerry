@@ -124,19 +124,20 @@ export default function App() {
 								</h3>
 								<ul className="space-y-3">
 									{[
-										"Home",
-										"About Us",
-										"Services",
-										"Training",
-										"Contact",
-										"Testimonials",
+										{ label: "Home", href: "/" },
+										{ label: "About Us", href: "/about" },
+										{ label: "Services", href: "/services" },
+										{ label: "Training", href: "/services" },
+										{ label: "Contact", href: "/contact" },
+										{ label: "Projects", href: "/projects" },
+										{ label: "Register", href: "/register" },
 									].map((item) => (
-										<li key={item}>
+										<li key={item.label}>
 											<a
-												href="/"
+												href={item.href}
 												className={`transition-colors duration-300 font-medium text-base ${themeClasses.link}`}
 											>
-												{item}
+												{item.label}
 											</a>
 										</li>
 									))}
@@ -152,18 +153,18 @@ export default function App() {
 								</h3>
 								<ul className="space-y-3">
 									{[
-										"App Development",
-										"Web Development",
-										"Gen-AI Solutions",
-										"Python Full Stack",
-										"Internship",
+										{ label: "App Development", href: "/services" },
+										{ label: "Web Development", href: "/services" },
+										{ label: "Gen-AI Solutions", href: "/services" },
+										{ label: "Python Full Stack", href: "/services" },
+										{ label: "Internship", href: "/register" },
 									].map((item) => (
-										<li key={item}>
+										<li key={item.label}>
 											<a
-												href="/"
+												href={item.href}
 												className={`transition-colors duration-300 font-medium text-base ${themeClasses.link}`}
 											>
-												{item}
+												{item.label}
 											</a>
 										</li>
 									))}
@@ -181,7 +182,7 @@ export default function App() {
 									{["Guide", "Status", "Contact us"].map((item) => (
 										<li key={item}>
 											<a
-												href="/"
+												href="/contact"
 												className={`transition-colors duration-300 font-medium text-base ${themeClasses.link}`}
 											>
 												{item}
