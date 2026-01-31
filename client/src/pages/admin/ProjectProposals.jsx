@@ -41,7 +41,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen })
 
       <div
         className={`${isCollapsed ? "w-20" : "w-64"
-          } fixed left-0 top-0 h-screen bg-white border-r border-[#FFFFFF] transition-all duration-300 ease-in-out flex flex-col z-50
+          } fixed left-0 top-0 h-screen bg-white border-r border-[#FFFFFF] flex flex-col z-50
           ${isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
       >
         <div className="p-4 sm:p-6 border-b border-[#FFFFFF] flex items-center justify-between">
