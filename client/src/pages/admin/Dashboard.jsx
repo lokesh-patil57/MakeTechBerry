@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Menu, X, Users, Briefcase, TrendingUp, FileText, ChevronRight, Search, Download, Filter, Calendar, Mail, Phone, MapPin, ExternalLink, Clock, LogOut } from "lucide-react";
+import { Menu, X, Users, Briefcase, TrendingUp, FileText, ClipboardList, ChevronRight, Search, Download, Filter, Calendar, Mail, Phone, MapPin, ExternalLink, Clock, LogOut } from "lucide-react";
 import { getInternships, getProjects } from "../../services/admin.service.js";
 
 const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen }) => {
@@ -8,6 +8,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen })
   const menuItems = [
     { icon: TrendingUp, label: "Dashboard", path: "/admin/dashboard", active: true },
     { icon: Users, label: "Internships", path: "/admin/internships", active: false },
+    { icon: ClipboardList, label: "Project Proposals", path: "/admin/project-proposals", active: false },
     { icon: Briefcase, label: "Projects", path: "/admin/projects", active: false },
     { icon: FileText, label: "Reports", path: "/admin/reports", active: false },
     { icon: Mail, label: "Messages", path: "/admin/messages", active: false },
@@ -45,7 +46,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen })
                 e.target.src = "/images/logo-no_bg.png";
               }}
             />
-            <span className="text-lg sm:text-2xl font-bold text-[#373771] tracking-tight">
+            <span className="text-lg sm:text-xl font-bold text-[#373771] tracking-tight">
               MakeTechBerry
             </span>
           </div>
