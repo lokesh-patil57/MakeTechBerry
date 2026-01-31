@@ -171,7 +171,7 @@ export default function AnimatedHero({ onGetStarted }) {
         </div>
 
         {/* Stats Section */}
-        <div className={`grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mt-8 sm:mt-12 md:mt-16 px-2 ${isVisible ? 'animate-fade-in-up opacity-0 delay-300' : 'opacity-0'}`}>
+        {/* <div className={`grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mt-8 sm:mt-12 md:mt-16 px-2 ${isVisible ? 'animate-fade-in-up opacity-0 delay-300' : 'opacity-0'}`}>
           {[
             { number: '500+', label: 'Interns Placed' },
             { number: '100+', label: 'Projects Completed' },
@@ -182,7 +182,7 @@ export default function AnimatedHero({ onGetStarted }) {
               <div className="text-xs sm:text-sm text-gray-600">{stat.label}</div>
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
     </div>
   );

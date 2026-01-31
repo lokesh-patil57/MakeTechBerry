@@ -16,21 +16,6 @@ import {
 } from "lucide-react";
 
 /**
- * AnimatedBackground Component
- */
-const AnimatedBackground = ({ children }) => {
-  return (
-    <div className="relative min-h-screen w-full bg-slate-50 overflow-hidden">
-      <div className="absolute top-0 left-0 w-full h-full -z-10 pointer-events-none opacity-40">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-100 rounded-full blur-[160px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-100 rounded-full blur-[160px]" />
-      </div>
-      {children}
-    </div>
-  );
-};
-
-/**
  * TestimonialCard Component
  */
 const TestimonialCard = ({ quote, name, role, image, highlights, index }) => {
@@ -291,7 +276,7 @@ const AboutPage = () => {
     setCurrentSlide((prev) => (prev - 1 + cards.length) % cards.length);
 
   return (
-    <AnimatedBackground>
+    <div className="min-h-screen bg-gradient-to-b from-[#f4efff] to-white pt-20 sm:pt-24 md:pt-28 px-3 sm:px-4 md:px-6 pb-8 sm:pb-12 hide-scrollbar">
       <div className="font-['Poppins',sans-serif] overflow-x-hidden antialiased">
         <style>{`
           @keyframes slideUp { 
@@ -338,61 +323,61 @@ const AboutPage = () => {
         `}</style>
 
         {/* --- HERO SECTION --- */}
-        <section className="relative pt-50 pb-60 text-center">
-          <div className="absolute top-0 left-0 w-full h-[82%] bg-slate-100/80 -z-10 border-b border-slate-200" />
+        <div className="relative min-h-[60vh] sm:min-h-[70vh] md:min-h-[80vh] flex items-center justify-center p-4 sm:p-6 md:p-8 overflow-hidden">
+          {/* Floating decorative elements - hidden on mobile */}
+          <div className="hidden sm:block absolute top-20 left-4 sm:left-10 w-12 sm:w-20 h-12 sm:h-20 bg-purple-300 rounded-full opacity-20 animate-float blur-xl"></div>
+          <div className="hidden sm:block absolute bottom-20 right-4 sm:right-10 w-16 sm:w-32 h-16 sm:h-32 bg-blue-300 rounded-full opacity-20 animate-float blur-xl" style={{animationDelay: '1s'}}></div>
+          <div className="hidden md:block absolute top-1/2 left-1/4 w-12 sm:w-16 h-12 sm:h-16 bg-pink-300 rounded-full opacity-20 animate-float blur-xl" style={{animationDelay: '0.5s'}}></div>
 
-          <div className="max-w-7xl mx-auto px-6 relative z-10">
-            <h1
-              className={`text-5xl md:text-7xl font-bold text-black mb-6 animate-fade-in-up stagger-1 ${
-                isVisible ? "opacity-100" : "opacity-0"
-              }`}
-            >
-              About{" "}
+          <div className="text-center max-w-4xl mx-auto relative z-10 w-full px-2 sm:px-4">
+            {/* Badge */}
+            <div className={`inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full glass-effect mb-4 sm:mb-6 ${isVisible ? 'animate-fade-in-down' : 'opacity-0'}`}>
+              <div className="w-1.5 sm:w-2 h-1.5 sm:h-2 bg-purple-500 rounded-full animate-pulse"></div>
+              <span className="text-xs sm:text-sm font-medium text-purple-700">🚀 About MakeTechBerry</span>
+            </div>
+
+            {/* Main Heading */}
+            <h1 className={`text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 leading-tight px-2 ${isVisible ? 'animate-fade-in-up opacity-0' : 'opacity-0'}`}>
+              <span className="text-gray-900">About </span>
               <span className="gradient-text relative inline-block">
                 MakeTechBerry
                 <div className="absolute inset-0 shimmer-effect"></div>
               </span>
             </h1>
 
-            <p
-              className={`text-gray-500 max-w-2xl mx-auto text-lg leading-relaxed animate-fade-in-up stagger-2 ${
-                isVisible ? "opacity-100" : "opacity-0"
-              }`}
-            >
-              A Pune-based startup founded in 2025, dedicated{" "}
-              <span className="text-gray-500 font-semibold">
-                to revolutionizing tech education through comprehensive training
-                and internship programs
-              </span>
-              , while enabling{" "}
-              <span className="text-gray-500 font-semibold">
-                companies to submit real-world projects
-              </span>{" "}
-              that are built by our talented intern teams.
+            {/* Subheading */}
+            <p className={`text-sm sm:text-base md:text-xl lg:text-2xl text-gray-600 max-w-3xl mx-auto mb-6 sm:mb-8 leading-relaxed px-2 ${isVisible ? 'animate-fade-in-up opacity-0 delay-200' : 'opacity-0'}`}>
+              A Pune-based startup founded in 2025, dedicated to <span className="text-purple-600 font-semibold">revolutionizing tech education</span> through comprehensive training and internship programs, while enabling <span className="text-blue-600 font-semibold">companies to submit real-world projects</span> that are built by our talented intern teams.
             </p>
-          </div>
 
-          <div className="absolute left-0 right-0 bottom-0 translate-y-1/2 z-20 hidden md:block">
-            <div className="max-w-7xl mx-auto px-6 grid gap-8 md:grid-cols-3">
-              {cards.map((card, index) => (
-                <div
+            {/* Feature Pills */}
+            <div className={`flex flex-wrap justify-center gap-2 sm:gap-3 mt-8 sm:mt-12 px-2 ${isVisible ? 'animate-fade-in-up opacity-0 delay-300' : 'opacity-0'}`}>
+              {['Innovation', 'Mentorship', 'Excellence', 'Practical'].map((feature, index) => (
+                <span
                   key={index}
-                  className={`bg-white rounded-[32px] p-10 shadow-xl border border-gray-50 hover:-translate-y-4 transition-all duration-500 group animate-fade-in-up stagger-${index + 1}`}
+                  className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-full text-xs sm:text-sm font-medium text-gray-700 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 cursor-default"
+                  style={{animationDelay: `${0.4 + index * 0.1}s`}}
                 >
-                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-8 shadow-xl transition-transform group-hover:rotate-6 bg-[#E7DEFE]">
-                    {card.icon}
-                  </div>
-                  <h3 className="text-2xl font-bold mb-4 text-[#181E4B]">
-                    {card.title}
-                  </h3>
-                  <p className="text-[#5E6282] leading-relaxed">
-                    {card.content}
-                  </p>
+                  ✨ {feature}
+                </span>
+              ))}
+            </div>
+
+            {/* Stats Section */}
+            <div className={`grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mt-8 sm:mt-12 md:mt-16 px-2 ${isVisible ? 'animate-fade-in-up opacity-0 delay-300' : 'opacity-0'}`}>
+              {[
+                { number: '500+', label: 'Interns Placed' },
+                { number: '100+', label: 'Projects Completed' },
+                { number: '50+', label: 'Partner Companies' }
+              ].map((stat, index) => (
+                <div key={index} className="glass-effect rounded-xl sm:rounded-2xl p-4 sm:p-6 hover:scale-105 transition-transform duration-300">
+                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold gradient-text mb-1 sm:mb-2">{stat.number}</div>
+                  <div className="text-xs sm:text-sm text-gray-600">{stat.label}</div>
                 </div>
               ))}
             </div>
           </div>
-        </section>
+        </div>
 
         {/* Mobile Story Slider */}
         <div className="md:hidden px-6 mt-[-80px] relative z-30 pb-20">
@@ -430,8 +415,6 @@ const AboutPage = () => {
             </div>
           </div>
         </div>
-
-        <div className="hidden md:block h-64"></div>
 
         {/* --- VALUES SECTION --- */}
         <section className="py-24 max-w-7xl mx-auto px-6 text-center">
@@ -508,7 +491,7 @@ const AboutPage = () => {
           </div>
         </section>
       </div>
-    </AnimatedBackground>
+    </div>
   );
 };
 

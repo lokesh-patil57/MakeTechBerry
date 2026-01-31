@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import Hero from "../components/hero";
+import Hero from "../components/common/hero";
 import ServicesSection from "../components/ServicesSection";
 import TrainingSection from "../components/TrainingSection";
 import { Bentogrid } from "../components/Bentogrid";

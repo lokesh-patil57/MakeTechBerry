@@ -145,7 +145,7 @@ const InternshipForm = ({ data, errors, step, loading, onChange, onStepChange, o
           />
           <Select
             label="Duration"
-            options={["1 Month", "3 Months", "6 Months"]}
+            options={["1 Month", "3 Months"]}
             value={data.duration}
             onChange={(e) => onChange("duration", e.target.value)}
             error={errors.duration}
