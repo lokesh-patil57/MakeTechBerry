@@ -1,10 +1,15 @@
 import multer from "multer";
 import path from "path";
+import { fileURLToPath } from "url";
 
-// Storage config
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Storage config - use absolute path to match static file serving
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/resumes");
+    const uploadDir = path.join(__dirname, "../../uploads/resumes");
+    cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname);
@@ -14,7 +19,11 @@ const storage = multer.diskStorage({
 
 // File filter (PDF only)
 const fileFilter = (req, file, cb) => {
-  if (file.mimetype === "application/pdf") {
+  if (
+    file.mimetype === "application/pdf" ||
+    file.mimetype === "application/octet-stream" ||
+    file.originalname.toLowerCase().endsWith(".pdf")
+  ) {
     cb(null, true);
   } else {
     cb(new Error("Only PDF files are allowed"), false);

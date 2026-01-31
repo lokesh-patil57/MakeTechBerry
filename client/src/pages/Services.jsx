@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { StickyScroll } from "@/components/ui/sticky-scroll-reveal";
-import AnimatedBackground from "../components/AnimatedBackground";
+import AnimatedHero from "../components/register/AnimatedHero";
+import "../styles/register.css";
 import {
 	Smartphone,
 	Globe,
@@ -144,54 +145,189 @@ const engineeringContent = [
 ];
 
 const Services = () => {
+	const [isVisible, setIsVisible] = useState(false);
+	const formRef = useRef(null);
+
+	useEffect(() => {
+		setIsVisible(true);
+	}, []);
+
+	const handleGetStarted = () => {
+		if (formRef.current) {
+			const element = formRef.current;
+			const offset = window.innerWidth < 640 ? 100 : window.innerWidth < 768 ? 110 : 120;
+			const elementPosition = element.getBoundingClientRect().top;
+			const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+			window.scrollTo({
+				top: offsetPosition,
+				behavior: 'smooth'
+			});
+		}
+	};
+
 	return (
-		<AnimatedBackground>
-			<div className="min-h-screen relative">
-				{/* Purple Blur Effect - Top */}
-				<div
-					aria-hidden="true"
-					className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
-				>
-					<div
-						style={{
-							clipPath:
-								"polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
-						}}
-						className="relative left-[calc(50%-11rem)] aspect-1155/678 w-36.125 -translate-x-1/2 rotate-30 bg-linear-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-72.1875"
-					/>
-				</div>
+		<div className="min-h-screen bg-gradient-to-b from-[#f4efff] to-white pt-20 sm:pt-24 md:pt-28 px-3 sm:px-4 md:px-6 pb-8 sm:pb-12 hide-scrollbar">
+			{/* Animated Hero Section */}
+			<div className="relative min-h-[60vh] sm:min-h-[70vh] md:min-h-[80vh] flex items-center justify-center p-4 sm:p-6 md:p-8 overflow-hidden">
+				<style>{`
+					@keyframes fadeInUp {
+						from {
+							opacity: 0;
+							transform: translateY(30px);
+						}
+						to {
+							opacity: 1;
+							transform: translateY(0);
+						}
+					}
 
-				{/* Purple Blur Effect - Bottom */}
-				<div
-					aria-hidden="true"
-					className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
-				>
-					<div
-						style={{
-							clipPath:
-								"polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
-						}}
-						className="relative left-[calc(50%+3rem)] aspect-1155/678 w-36.125 -translate-x-1/2 bg-linear-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-72.1875"
-					/>
-				</div>
+					@keyframes fadeInDown {
+						from {
+							opacity: 0;
+							transform: translateY(-20px);
+						}
+						to {
+							opacity: 1;
+							transform: translateY(0);
+						}
+					}
 
-				{/* Hero Section */}
-				<section className="pt-32 pb-16 px-4 sm:px-6 lg:px-8 relative isolate">
-					<div className="max-w-7xl mx-auto text-center">
-						<p className="text-[#DF6951] font-bold text-lg uppercase tracking-widest mb-4">
-							Our Services
-						</p>
-						<h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 mb-6 tracking-tight">
-							What We Do
-						</h1>
-						<p className="text-lg sm:text-xl text-gray-500 max-w-3xl mx-auto leading-relaxed">
-							We specialize in building modern, scalable, and intelligent
-							solutions across multiple domains. Our expertise spans from
-							cutting-edge software development to innovative engineering
-							projects.
-						</p>
+					@keyframes scaleIn {
+						from {
+							opacity: 0;
+							transform: scale(0.9);
+						}
+						to {
+							opacity: 1;
+							transform: scale(1);
+						}
+					}
+
+					@keyframes float {
+						0%, 100% {
+							transform: translateY(0px);
+						}
+						50% {
+							transform: translateY(-10px);
+						}
+					}
+
+					@keyframes shimmer {
+						0% {
+							background-position: -1000px 0;
+						}
+						100% {
+							background-position: 1000px 0;
+						}
+					}
+
+					.animate-fade-in-up {
+						animation: fadeInUp 0.8s ease-out forwards;
+					}
+
+					.animate-fade-in-down {
+						animation: fadeInDown 0.6s ease-out forwards;
+					}
+
+					.animate-scale-in {
+						animation: scaleIn 0.6s ease-out forwards;
+					}
+
+					.animate-float {
+						animation: float 3s ease-in-out infinite;
+					}
+
+					.gradient-text {
+						background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+						-webkit-background-clip: text;
+						-webkit-text-fill-color: transparent;
+						background-clip: text;
+					}
+
+					.shimmer-effect {
+						background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+						background-size: 1000px 100%;
+						animation: shimmer 2s infinite;
+					}
+
+					.glass-effect {
+						background: rgba(255, 255, 255, 0.7);
+						backdrop-filter: blur(10px);
+						border: 1px solid rgba(255, 255, 255, 0.3);
+					}
+
+					.delay-100 {
+						animation-delay: 0.1s;
+					}
+
+					.delay-200 {
+						animation-delay: 0.2s;
+					}
+
+					.delay-300 {
+						animation-delay: 0.3s;
+					}
+				`}</style>
+
+				{/* Floating decorative elements - hidden on mobile */}
+				<div className="hidden sm:block absolute top-20 left-4 sm:left-10 w-12 sm:w-20 h-12 sm:h-20 bg-purple-300 rounded-full opacity-20 animate-float blur-xl"></div>
+				<div className="hidden sm:block absolute bottom-20 right-4 sm:right-10 w-16 sm:w-32 h-16 sm:h-32 bg-blue-300 rounded-full opacity-20 animate-float blur-xl" style={{animationDelay: '1s'}}></div>
+				<div className="hidden md:block absolute top-1/2 left-1/4 w-12 sm:w-16 h-12 sm:h-16 bg-pink-300 rounded-full opacity-20 animate-float blur-xl" style={{animationDelay: '0.5s'}}></div>
+
+				<div className="text-center max-w-4xl mx-auto relative z-10 w-full px-2 sm:px-4">
+					{/* Badge */}
+					<div className={`inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full glass-effect mb-4 sm:mb-6 ${isVisible ? 'animate-fade-in-down' : 'opacity-0'}`}>
+						<div className="w-1.5 sm:w-2 h-1.5 sm:h-2 bg-purple-500 rounded-full animate-pulse"></div>
+						<span className="text-xs sm:text-sm font-medium text-purple-700">🚀 Our Expertise</span>
 					</div>
-				</section>
+
+					{/* Main Heading */}
+					<h1 className={`text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 leading-tight px-2 ${isVisible ? 'animate-fade-in-up opacity-0' : 'opacity-0'}`}>
+						<span className="text-gray-900">What </span>
+						<span className="gradient-text relative inline-block">
+							We Do
+							<div className="absolute inset-0 shimmer-effect"></div>
+						</span>
+					</h1>
+
+					{/* Subheading */}
+					<p className={`text-sm sm:text-base md:text-xl lg:text-2xl text-gray-600 max-w-3xl mx-auto mb-6 sm:mb-8 leading-relaxed px-2 ${isVisible ? 'animate-fade-in-up opacity-0 delay-200' : 'opacity-0'}`}>
+						We specialize in building modern, scalable, and intelligent solutions across multiple domains. Our expertise spans from cutting-edge software development to innovative engineering projects.
+					</p>
+
+					
+
+					{/* Feature Pills */}
+					<div className={`flex flex-wrap justify-center gap-2 sm:gap-3 mt-8 sm:mt-12 px-2 ${isVisible ? 'animate-fade-in-up opacity-0 delay-300' : 'opacity-0'}`}>
+						{['AI & ML', 'Engineering', 'Web & Mobile', 'Innovation'].map((feature, index) => (
+							<span
+								key={index}
+								className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-full text-xs sm:text-sm font-medium text-gray-700 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 cursor-default"
+								style={{animationDelay: `${0.4 + index * 0.1}s`}}
+							>
+								✨ {feature}
+							</span>
+						))}
+					</div>
+
+					{/* Stats Section */}
+					<div className={`grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mt-8 sm:mt-12 md:mt-16 px-2 ${isVisible ? 'animate-fade-in-up opacity-0 delay-300' : 'opacity-0'}`}>
+						{[
+							{ number: '10+', label: 'Services' },
+							{ number: '100+', label: 'Projects Completed' },
+							{ number: '24/7', label: 'Support' }
+						].map((stat, index) => (
+							<div key={index} className="glass-effect rounded-xl sm:rounded-2xl p-4 sm:p-6 hover:scale-105 transition-transform duration-300">
+								<div className="text-2xl sm:text-3xl md:text-4xl font-bold gradient-text mb-1 sm:mb-2">{stat.number}</div>
+								<div className="text-xs sm:text-sm text-gray-600">{stat.label}</div>
+							</div>
+						))}
+					</div>
+				</div>
+			</div>
+
+			<div className="max-w-7xl mx-auto w-full" ref={formRef}>
 
 				{/* Sticky Scroll Services Section */}
 				<section className="px-4 sm:px-6 lg:px-8 pb-20">
@@ -492,7 +628,7 @@ const Services = () => {
 					</div>
 				</section>
 			</div>
-		</AnimatedBackground>
+		</div>
 	);
 };
 

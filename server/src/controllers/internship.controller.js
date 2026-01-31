@@ -2,6 +2,14 @@ import Internship from "../models/Internship.model.js";
 
 export const registerInternship = async (req, res) => {
   try {
+    // Check if file was uploaded
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "Resume file is required. Please upload a PDF file.",
+      });
+    }
+
     const internship = await Internship.create({
       ...req.body,
       resume: req.file.path,
@@ -13,9 +21,10 @@ export const registerInternship = async (req, res) => {
       data: internship,
     });
   } catch (error) {
-    res.status(400).json({
+    console.error("Internship registration error:", error);
+    res.status(500).json({
       success: false,
-      message: error.message,
+      message: error.message || "Registration failed. Please try again.",
     });
   }
 };
