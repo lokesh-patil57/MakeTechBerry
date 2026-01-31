@@ -1,13 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Mail, Phone, MapPin, Clock, Send, ChevronDown } from "lucide-react";
 import { sendContactMessage } from "../services/contact.service.js";
 import { useToast } from "../hooks/useToast.js";
 import Toast from "../components/forms/Toast.jsx";
+import "../styles/register.css";
 
 const Contact = () => {
   const [openFaq, setOpenFaq] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const { toast, showToast, hideToast } = useToast();
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -80,21 +86,149 @@ const Contact = () => {
   ];
 
   return (
-    <div className="pt-28 min-h-screen bg-[#FCFBFF]">
-      {/* HEADER */}
-      <section className="px-6">
-        <div className="max-w-6xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-black tracking-tight text-gray-900">
-            Let’s Talk with{" "}
-            <span className="text-purple-600">MakeTechBerry</span>
+    <div className="min-h-screen bg-gradient-to-b from-[#f4efff] to-white pt-20 sm:pt-24 md:pt-28 px-3 sm:px-4 md:px-6 pb-8 sm:pb-12 hide-scrollbar">
+      {/* Animated Hero Section */}
+      <div className="relative min-h-[60vh] sm:min-h-[70vh] md:min-h-[80vh] flex items-center justify-center p-4 sm:p-6 md:p-8 overflow-hidden">
+        <style>{`
+          @keyframes fadeInUp {
+            from {
+              opacity: 0;
+              transform: translateY(30px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+
+          @keyframes fadeInDown {
+            from {
+              opacity: 0;
+              transform: translateY(-20px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+
+          @keyframes scaleIn {
+            from {
+              opacity: 0;
+              transform: scale(0.9);
+            }
+            to {
+              opacity: 1;
+              transform: scale(1);
+            }
+          }
+
+          @keyframes float {
+            0%, 100% {
+              transform: translateY(0px);
+            }
+            50% {
+              transform: translateY(-10px);
+            }
+          }
+
+          @keyframes shimmer {
+            0% {
+              background-position: -1000px 0;
+            }
+            100% {
+              background-position: 1000px 0;
+            }
+          }
+
+          .animate-fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+          }
+
+          .animate-fade-in-down {
+            animation: fadeInDown 0.6s ease-out forwards;
+          }
+
+          .animate-scale-in {
+            animation: scaleIn 0.6s ease-out forwards;
+          }
+
+          .animate-float {
+            animation: float 3s ease-in-out infinite;
+          }
+
+          .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+          }
+
+          .shimmer-effect {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            background-size: 1000px 100%;
+            animation: shimmer 2s infinite;
+          }
+
+          .glass-effect {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+          }
+
+          .delay-100 {
+            animation-delay: 0.1s;
+          }
+
+          .delay-200 {
+            animation-delay: 0.2s;
+          }
+
+          .delay-300 {
+            animation-delay: 0.3s;
+          }
+        `}</style>
+
+        {/* Floating decorative elements - hidden on mobile */}
+        <div className="hidden sm:block absolute top-20 left-4 sm:left-10 w-12 sm:w-20 h-12 sm:h-20 bg-purple-300 rounded-full opacity-20 animate-float blur-xl"></div>
+        <div className="hidden sm:block absolute bottom-20 right-4 sm:right-10 w-16 sm:w-32 h-16 sm:h-32 bg-blue-300 rounded-full opacity-20 animate-float blur-xl" style={{animationDelay: '1s'}}></div>
+        <div className="hidden md:block absolute top-1/2 left-1/4 w-12 sm:w-16 h-12 sm:h-16 bg-pink-300 rounded-full opacity-20 animate-float blur-xl" style={{animationDelay: '0.5s'}}></div>
+
+        <div className="text-center max-w-4xl mx-auto relative z-10 w-full px-2 sm:px-4">
+          {/* Badge */}
+          <div className={`inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full glass-effect mb-4 sm:mb-6 ${isVisible ? 'animate-fade-in-down' : 'opacity-0'}`}>
+            <div className="w-1.5 sm:w-2 h-1.5 sm:h-2 bg-purple-500 rounded-full animate-pulse"></div>
+            <span className="text-xs sm:text-sm font-medium text-purple-700">📞 Get in Touch with Us</span>
+          </div>
+
+          {/* Main Heading */}
+          <h1 className={`text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 leading-tight px-2 ${isVisible ? 'animate-fade-in-up opacity-0' : 'opacity-0'}`}>
+            <span className="text-gray-900">Let’s Talk with </span>
+            <span className="gradient-text relative inline-block">
+              MakeTechBerry
+              <div className="absolute inset-0 shimmer-effect"></div>
+            </span>
           </h1>
 
-          <p className="mt-3 text-gray-600 max-w-2xl mx-auto text-base md:text-lg">
-            Have a project idea, internship query, or want to collaborate? Send
-            us a message and we’ll connect with you.
+          {/* Subheading */}
+          <p className={`text-sm sm:text-base md:text-xl lg:text-2xl text-gray-600 max-w-3xl mx-auto mb-6 sm:mb-8 leading-relaxed px-2 ${isVisible ? 'animate-fade-in-up opacity-0 delay-200' : 'opacity-0'}`}>
+            Have a project idea, internship query, or want to collaborate? Send us a message and we’ll connect with you.
           </p>
+
+          {/* Feature Pills */}
+          <div className={`flex flex-wrap justify-center gap-2 sm:gap-3 mt-8 sm:mt-12 px-2 ${isVisible ? 'animate-fade-in-up opacity-0 delay-300' : 'opacity-0'}`}>
+            {['Quick Response', 'Expert Guidance', 'Project Support', 'Collaboration'].map((feature, index) => (
+              <span
+                key={index}
+                className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white rounded-full text-xs sm:text-sm font-medium text-gray-700 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 cursor-default"
+                style={{animationDelay: `${0.4 + index * 0.1}s`}}
+              >
+                ✨ {feature}
+              </span>
+            ))}
+          </div>
         </div>
-      </section>
+      </div>
 
       {/* MAIN CONTENT */}
       <section className="px-6 py-12">
@@ -350,5 +484,6 @@ const Contact = () => {
     </div>
   );
 };
+
 
 export default Contact;
